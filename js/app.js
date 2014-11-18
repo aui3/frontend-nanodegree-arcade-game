@@ -1,6 +1,9 @@
 // Enemies our player must avoid
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=435;
+var STEP=75;
+var PLAYER_HEIGHT=171;
+var PLAYER_WIDTH=101;
 
 var Enemy = function(x,y) {
     // Variables applied to each of our instances go here,
@@ -43,7 +46,11 @@ Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    
+    if (allEnemies[0].x==this.x && allEnemies[0].y==this.y){
+        //alert("collision");
+        this.x=INITIAL_X_PLAYER;
+        this.y=INITIAL_Y_PLAYER;
+    }
 
 }
 
@@ -51,40 +58,12 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 Player.prototype.handleInput = function(keycode) {
-    //alert(keycode);
-    //update();
+
     var newpos;
-    /*
-    if(this.x>=CANVAS_WIDTH || this.x<=0)
-    {
-        this.x=INITIAL_X_PLAYER;
-        this.y=INITAL_Y_PLAYER;
-    }
-    if(this.y>=CANVAS_WIDTH || this.y<=0)
-    {
-        this.x=INITIAL_X_PLAYER;
-        this.y=INITAL_Y_PLAYER;
-    }   
-    if (keycode=='up' && this.y>=0)
-    {
-        this.y-=75;
-    }
-    if (keycode=='down')
-    {
-        this.y+=100;
-    }
-    if (keycode=='left')
-    {
-        this.x-=83;
-    }
-    if (keycode=='right')
-    {
-        this.x+=83;
-    }
-    */
+    //ensure that the player stays in bound
     if (keycode=='up')
     {
-        newpos=this.y-75;
+        newpos=this.y-STEP;
         if(newpos>=0){
             this.y=newpos;
         }
@@ -94,7 +73,7 @@ Player.prototype.handleInput = function(keycode) {
     }
     if (keycode=='down')
     {
-       newpos=this.y+75;
+       newpos=this.y+STEP;
         if(newpos<=INITIAL_Y_PLAYER){
             this.y=newpos;
         }
@@ -104,7 +83,7 @@ Player.prototype.handleInput = function(keycode) {
     }
     if (keycode=='left')
     {
-        newpos=this.x-83;
+        newpos=this.x-STEP;
         if(newpos>=0){
             this.x=newpos;
         }
@@ -114,12 +93,12 @@ Player.prototype.handleInput = function(keycode) {
     }
     if (keycode=='right')
     {
-        newpos=this.x+75;
-        if((newpos +101)<=505){
+        newpos=this.x+STEP;
+        if((newpos +PLAYER_WIDTH)<=505){
             this.x=newpos;
         }
         else{
-            this.x=505-101;
+            this.x=505- PLAYER_WIDTH;
         }
 
         

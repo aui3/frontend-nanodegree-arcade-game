@@ -1,11 +1,11 @@
 // Enemies our player must avoid bug is 100x 70
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=380;
-var STEP=75;
-var PLAYER_HEIGHT=50;
-var PLAYER_WIDTH=70;
-var BUG_HEIGHT=50;
-var BUG_WIDTH=70;
+var STEP=70;
+var PLAYER_HEIGHT=80;
+var PLAYER_WIDTH=75;
+var BUG_HEIGHT=70;
+var BUG_WIDTH=101;
 
 var Enemy = function(x,y) {
     // Variables applied to each of our instances go here,
@@ -45,7 +45,7 @@ Enemy.prototype.render = function() {
 var Player=function(x,y){
     this.x=x;
     this.y=y;
-    this.sprite='images/char-pink-girl.png';
+    this.sprite='images/char-cat-girl.png';
 
 }
 Player.prototype.update = function(dt) {
@@ -212,7 +212,7 @@ Player.prototype.handleInput = function(keycode) {
     if (keycode=='right')
     {
         newpos=this.x+STEP;
-        if((newpos +PLAYER_WIDTH)<=505){
+        if((newpos+15 +PLAYER_WIDTH)<=505){
             this.x=newpos;
         }
         else{

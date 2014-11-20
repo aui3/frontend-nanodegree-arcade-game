@@ -9,7 +9,7 @@ var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
 var BLOCK_HEIGHT=80;//height of block elements of the map
 var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the right horizontally
-var SLIDE_PLAYER_Y=75;//the actual player image starts after 75 pixels down vertically 
+var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically 
 
 
 var Enemy = function(x,y) {
@@ -71,10 +71,10 @@ Player.prototype.update = function(dt) {
 
     };
     player1={
-         'top':   this.y+60,
-         'bottom': this.y+60+80,
-         'right': this.x+15+75,
-         'left': this.x+15
+         'top':   this.y+SLIDE_PLAYER_Y,
+         'bottom': this.y+SLIDE_PLAYER_Y+PLAYER_HEIGHT,
+         'right': this.x+SLIDE_PLAYER_X+PLAYER_WIDTH,
+         'left': this.x+SLIDE_PLAYER_X
 
     };
     if(!(player1.left>(bug.right-10) || player1.right < (bug.left+10) ||player1.top>(bug.bottom-10) || player1.bottom <(bug.top+10)))
@@ -217,7 +217,7 @@ Player.prototype.handleInput = function(keycode) {
     if (keycode=='right')
     {
         newpos=this.x+STEP_X;
-        if((newpos+SLIDE_PLAYER_X +PLAYER_WIDTH)<=505){//incorpotate for the point where the actual image starts
+        if((newpos+SLIDE_PLAYER_X +PLAYER_WIDTH)<=CANVAS_WIDTH){//incorpotate for the point where the actual image starts
             this.x=newpos;
         }
         //else{

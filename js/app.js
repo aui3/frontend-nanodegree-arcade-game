@@ -1,11 +1,16 @@
 // Enemies our player must avoid bug is 100x 70
 var INITIAL_X_PLAYER=200;
-var INITIAL_Y_PLAYER=380;
-var STEP=70;
+var INITIAL_Y_PLAYER=400;
+var STEP_Y=80;
+var STEP_X=95;
 var PLAYER_HEIGHT=80;
 var PLAYER_WIDTH=75;
 var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
+var BLOCK_HEIGHT=80;//height of block elements of the map
+var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the right horizontally
+var SLIDE_PLAYER_Y=75;//the actual player image starts after 75 pixels down vertically 
+
 
 var Enemy = function(x,y) {
     // Variables applied to each of our instances go here,
@@ -181,17 +186,17 @@ Player.prototype.handleInput = function(keycode) {
     //ensure that the player stays in bound
     if (keycode=='up')
     {
-        newpos=this.y-STEP;
-        if(newpos>=80){//river
+        newpos=this.y-STEP_Y;
+        if(newpos>=BLOCK_HEIGHT){//top block is river
             this.y=newpos;
         }
         else {
-            this.y=80;
+            this.y=BLOCK_HEIGHT;
         }
     }
     if (keycode=='down')
     {
-       newpos=this.y+STEP;
+       newpos=this.y+STEP_Y;
         if(newpos<=INITIAL_Y_PLAYER){
             this.y=newpos;
         }
@@ -201,23 +206,23 @@ Player.prototype.handleInput = function(keycode) {
     }
     if (keycode=='left')
     {
-        newpos=this.x-STEP;
+        newpos=this.x-STEP_X;
         if(newpos>=0){
             this.x=newpos;
         }
-        else {
-            this.x=0;
-        } 
+        //else {
+          //  this.x=-SLIDE_PLAYER_X;
+        //} 
     }
     if (keycode=='right')
     {
-        newpos=this.x+STEP;
-        if((newpos+15 +PLAYER_WIDTH)<=505){
+        newpos=this.x+STEP_X;
+        if((newpos+SLIDE_PLAYER_X +PLAYER_WIDTH)<=505){//incorpotate for the point where the actual image starts
             this.x=newpos;
         }
-        else{
-            this.x=505- PLAYER_WIDTH;
-        }
+        //else{
+          //  this.x=505- PLAYER_WIDTH-SLIDE_PLAYER_X;
+        //}
 
         
     }

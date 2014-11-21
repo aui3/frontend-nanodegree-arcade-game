@@ -1,13 +1,23 @@
 // Enemies our player must avoid bug is 100x 70
-var INITIAL_X_PLAYER=200;
-var INITIAL_Y_PLAYER=400;
+var CANVAS_WIDTH=505;
+
+var BLOCK_HEIGHT=80;//height of block elements of the map
+
+
 var STEP_Y=80;
 var STEP_X=95;
-var PLAYER_HEIGHT=80;
-var PLAYER_WIDTH=75;
+
+
 var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
-var BLOCK_HEIGHT=80;//height of block elements of the map
+//var SLIDE_BUG_X=15;//the actual player image starts after 15 pixels to the right horizontally
+var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
+
+
+var INITIAL_X_PLAYER=200;
+var INITIAL_Y_PLAYER=400;
+var PLAYER_HEIGHT=80;
+var PLAYER_WIDTH=75;
 var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the right horizontally
 var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically 
 
@@ -29,19 +39,30 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x+=5;
+    this.x+=3;
     if (this.x>=CANVAS_WIDTH) {
+        var rand1=Math.floor(Math.random() *3 + 0);
         this.x=0;
+        if(rand1==0){
+            this.y=65;
+        }
+        if (rand1==1){
+            this.y=145;
+        }
+        if(rand1==2){
+            this.y=225;
+        }
+
     }
 }
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    ctx.rect(this.x,(this.y+75),101,70);/* PLAYER_WIDTH, PLAYER_HEIGHT);*/
+    /*ctx.rect(this.x,(this.y+75),101,70);
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'black';
-    ctx.stroke();
+    ctx.stroke();*/
 }
 
 // Now write your own player class
@@ -63,13 +84,8 @@ Player.prototype.update = function(dt) {
 //      right: // the x-value of the right side of the rectangle
 //      left: // the x-value of the left side of the rectangle
 // };
-    bug={
-         'top':   allEnemies[0].y+75,
-         'bottom': allEnemies[0].y+75+70,
-         'right': allEnemies[0].x+101,
-         'left': allEnemies[0].x
+    
 
-    };
     player1={
          'top':   this.y+SLIDE_PLAYER_Y,
          'bottom': this.y+SLIDE_PLAYER_Y+PLAYER_HEIGHT,
@@ -77,11 +93,22 @@ Player.prototype.update = function(dt) {
          'left': this.x+SLIDE_PLAYER_X
 
     };
-    if(!(player1.left>(bug.right-10) || player1.right < (bug.left+10) ||player1.top>(bug.bottom-10) || player1.bottom <(bug.top+10)))
-    {
-        this.x=INITIAL_X_PLAYER;
-        this.y=INITIAL_Y_PLAYER;
+    
 
+    for (enemyBug in allEnemies){
+        bug={
+             'top':   allEnemies[enemyBug].y+SLIDE_BUG_Y,
+             'bottom': allEnemies[enemyBug].y+SLIDE_BUG_Y+BUG_HEIGHT,
+             'right': allEnemies[enemyBug].x+BUG_WIDTH,
+             'left': allEnemies[enemyBug].x
+
+        };
+        if(!(player1.left>(bug.right-10) || player1.right < (bug.left+10) ||player1.top>(bug.bottom-10) || player1.bottom <(bug.top+10)))
+        {
+            this.x=INITIAL_X_PLAYER;
+            this.y=INITIAL_Y_PLAYER;
+
+        }
     }
 
 
@@ -237,15 +264,18 @@ var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);
 var allEnemies= [];
 //var enemy= new Enemy(0,0);
 //var enemy1= new Enemy(100,0);
-//var enemy= new Enemy(0,65);
-var enemy1= new Enemy(0,145);
-//var enemy2= new Enemy(0,70);
+var rand1=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
+var enemy1= new Enemy(rand1,65);
+var rand2=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
+var enemy2= new Enemy(rand2,145);
+var rand3=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
+var enemy3= new Enemy(rand3,225);
 //var enemy3=new Enemy(0,140)
 
 
-//allEnemies.push(enemy);
 allEnemies.push(enemy1);
-//allEnemies.push(enemy2);
+allEnemies.push(enemy2);
+allEnemies.push(enemy3);
 //allEnemies.push(enemy3);
 
 

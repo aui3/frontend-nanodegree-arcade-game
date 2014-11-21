@@ -15,6 +15,7 @@ var MAX_BUGS=3;
 var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
 
 var SCORE=0;
+var LIVES=3;
 
 //initial position of player
 var INITIAL_X_PLAYER=200;
@@ -109,7 +110,10 @@ Player.prototype.update = function(dt) {
             this.x=INITIAL_X_PLAYER;
             this.y=INITIAL_Y_PLAYER;
              //decrease life hearts
+            LIVES=LIVES-1;
             $(".life1:last").detach();
+
+            //if (LIVES==0) ctx.drawImage('images/gameover1.png',0,0);
         }
     }
 }

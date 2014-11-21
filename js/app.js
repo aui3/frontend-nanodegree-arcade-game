@@ -4,15 +4,18 @@ var CANVAS_WIDTH=505;
 var BLOCK_HEIGHT=80;//height of block elements of the map
 
 
-var STEP_Y=80;
-var STEP_X=95;
+var STEP_Y=80;//move 80 px vertically
+var STEP_X=95;//move 95 pixels horizontally
 
 
 var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
+var BUG_SPEED =[5,3,2];
+
 //var SLIDE_BUG_X=15;//the actual player image starts after 15 pixels to the right horizontally
 var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
 
+var SCORE=0;
 
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=400;
@@ -22,7 +25,9 @@ var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the ri
 var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically 
 
 
-var Enemy = function(x,y) {
+
+
+var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -31,6 +36,7 @@ var Enemy = function(x,y) {
     this.sprite = 'images/enemy-bug.png';
     this.x=x;
     this.y=y;
+    this.speed=speed;
 }
 
 // Update the enemy's position, required method for game
@@ -39,7 +45,8 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-    this.x+=3;
+    
+    this.x+=this.speed;
     if (this.x>=CANVAS_WIDTH) {
         var rand1=Math.floor(Math.random() *3 + 0);
         this.x=0;
@@ -107,96 +114,8 @@ Player.prototype.update = function(dt) {
         {
             this.x=INITIAL_X_PLAYER;
             this.y=INITIAL_Y_PLAYER;
-
         }
     }
-
-
-    //ctx.rect(this.x,(this.y+75),101,70); bug
-    //ctx.rect(this.x+15,(this.y+60),75,80);player
-    /*bugRectangle=[
-                    [allEnemies[0].x,(allEnemies[0].y+75)],//topleft
-                    [(allEnemies[0].x+101),(allEnemies[0].y+75)],//topright
-                    [(allEnemies[0].x+101), (allEnemies[0].y+75+70)],//bottpmright
-                    [allEnemies[0].x,(allEnemies[0].y+70+75)]//bottomleft
-                ];//topleft,topright,bottomright,bottomleft
-    playerRectangle=[
-                        [(this.x+15),(this.y+60)],
-                        [(this.x+15+75),(this.y+60)],
-                        [(this.x+15+75),(this.y+60+80)],
-                        [(this.x+15),(this.y+60+80)]
-                    ];
-    //checkCollision(bugRectangle,playerRectangle);
-    if(playerRectangle[0][0]<bugRectangle[2][0] && playerRectangle[0][0]>bugRectangle[3][0] ){
-            if(playerRectangle[0][1]>bugRectangle[0][1] && playerRectangle[0][1]<bugRectangle[3][1]){
-
-                //inital
-                 this.x=INITIAL_X_PLAYER;
-                thhis.y=INITIAL_Y_PLAYER;
-            }
-
-    }
-//scenario 4 
-    if(playerRectangle[1][0]<bugRectangle[2][0] && playerRectangle[1][0]>bugRectangle[3][0] ){
-            if(playerRectangle[1][1]>bugRectangle[0][1] && playerRectangle[1][1]<bugRectangle[3][1]){
-                 this.x=INITIAL_X_PLAYER;
-                this.y=INITIAL_Y_PLAYER;    
-                //inital
-            }
-
-    }*/
-                    /*
-    var pendx=this.x+PLAYER_WIDTH;
-    var pendy=this.y+PLAYER_HEIGHT;
-    var bendx=allEnemies[0].x+BUG_WIDTH;
-    var bendy=allEnemies[0].y+BUG_HEIGHT;
-    
-
-    if (bendx<pendx && bendx>this.x){//top right of bug between top left and top right of player
-        if(bendy<pendy && bendy>this.y){//bottom right of bug(bendx,bendy) is inside player rect
-            this.x=INITIAL_X_PLAYER;
-            this.y=INITIAL_Y_PLAYER;   
-        }
-        if(allEnemies[0].y>this.y && allEnemies[0].y<pendy){//top right of bug inside
-            this.x=INITIAL_X_PLAYER;
-            this.y=INITIAL_Y_PLAYER;
-
-        }
-    }
-    if(allEnemies[0].x<pendx && allEnemies[0].x>this.x){//left edge of bug inside  player
-        if(bendy<pendy && bendy>this.y){//bottom left of bug
-            this.x=INITIAL_X_PLAYER;
-            this.y=INITIAL_Y_PLAYER;
-
-        }
-        if(allEnemies[0].y<pendy && allEnemies[0].x>this.y){//top leftt og buy
-                this.x=INITIAL_X_PLAYER;
-            this.y=INITIAL_Y_PLAYER;
-
-        }
-
-
-    }   */
-    /*if ( (allEnemies[0].x<this.x)  && (this.x<=(allEnemies[0].x+101)) && (allEnemies[0].y<this.y && this.y<(allEnemies[0].y+71))){
-        //alert("collision");
-        this.x=INITIAL_X_PLAYER;
-        this.y=INITIAL_Y_PLAYER;
-    }*/
-    
-    //bug is up
-    /*if(   (this.y<bendy && bendy<pendy) && (bendx>this.x && bendx <pendx)    ){
-        this.x=INITIAL_X_PLAYER;
-        this.y=INITIAL_Y_PLAYER;
-    }
-    if (this.y==allEnemies[0].y)
-    {
-        this.x=INITIAL_X_PLAYER;
-        this.y=INITIAL_Y_PLAYER;
-
-    }*/
-    
-
-
 }
 
 Player.prototype.render = function() {
@@ -214,11 +133,14 @@ Player.prototype.handleInput = function(keycode) {
     if (keycode=='up')
     {
         newpos=this.y-STEP_Y;
-        if(newpos>=BLOCK_HEIGHT){//top block is river
+        //this.y=newpos;
+        if(newpos>BLOCK_HEIGHT){//top block is river
             this.y=newpos;
         }
-        else {
+        else {//PLAYER REACHES THE TOP, RESTART
             this.y=BLOCK_HEIGHT;
+            //this.y=INITIAL_Y_PLAYER;
+            //this.x=INITIAL_X_PLAYER;
         }
     }
     if (keycode=='down')
@@ -265,11 +187,16 @@ var allEnemies= [];
 //var enemy= new Enemy(0,0);
 //var enemy1= new Enemy(100,0);
 var rand1=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
-var enemy1= new Enemy(rand1,65);
+var rand11=Math.floor(Math.random() *3 + 0);
+var enemy1= new Enemy(rand1,65,BUG_SPEED[rand11]);
+
 var rand2=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
-var enemy2= new Enemy(rand2,145);
+var rand22=Math.floor(Math.random() *3 + 0);
+var enemy2= new Enemy(rand2,145,BUG_SPEED[rand22]);
+
 var rand3=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
-var enemy3= new Enemy(rand3,225);
+var rand33=Math.floor(Math.random() *3 + 0);
+var enemy3= new Enemy(rand3,225,BUG_SPEED[rand33]);
 //var enemy3=new Enemy(0,140)
 
 

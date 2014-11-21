@@ -15,26 +15,32 @@
  */
 var CANVAS_HEIGHT=606;
 var CANVAS_WIDTH=505;
-
+var MAX_LIFE=3;
 
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
-    var HTML_Life="<img class='life' src='images/Heart.png' height='50' width='50'>"; 
+    //load heart image to represent life
+    var HTML_Life="<img class='life1' src='images/Heart.png' height='50' width='50'>"; 
+    
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-    //doc.getElementById("rules").innerHTML=doc.getElementById("rules").innerHTML+"HELLO";
-    for (i=0;i<3;i++){
-        $("#rules").append(HTML_Life);
+    
+    //load all heart images
+    for (i=0;i<MAX_LIFE;i++){
+        $(".life").append(HTML_Life);
     }
+
+
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
-    doc.body.appendChild(canvas);
+    //doc.body.appendChild(canvas);
+    $("#canvas1").append(canvas); //append to canvas div 
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.

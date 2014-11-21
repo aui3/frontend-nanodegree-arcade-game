@@ -116,7 +116,7 @@ Player.prototype.update = function(dt) {
             this.y=INITIAL_Y_PLAYER;
 
             //decrease life hearts
-            $(".life:last").detach();
+            $(".life1:last").detach();
         }
     }
 }
@@ -226,3 +226,4 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+    

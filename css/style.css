@@ -8,4 +8,10 @@ body {
 	margin-right:30px;
 
 }
+.life {
+	text-align: left;
+}
+#canvas {
+	flex-direction: column;
+}
 

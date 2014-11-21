@@ -114,6 +114,9 @@ Player.prototype.update = function(dt) {
         {
             this.x=INITIAL_X_PLAYER;
             this.y=INITIAL_Y_PLAYER;
+
+            //decrease life hearts
+            $(".life:last").detach();
         }
     }
 }
@@ -223,19 +226,3 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-clickLocations = [];
-
-function logClicks(x,y) {
-  clickLocations.push(
-    {
-      "x": x,
-      "y": y
-    }
-  );
-  console.log("x location: " + x + "; y location: " + y);
-}
-
-
-$(document).click(function(loc){
-    logClicks(loc.pageX,loc.pageY);
-    });

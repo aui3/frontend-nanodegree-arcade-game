@@ -22,12 +22,16 @@ var Engine = (function(global) {
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
+    var HTML_Life="<img class='life' src='images/Heart.png' height='50' width='50'>"; 
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-
+    //doc.getElementById("rules").innerHTML=doc.getElementById("rules").innerHTML+"HELLO";
+    for (i=0;i<3;i++){
+        $("#rules").append(HTML_Life);
+    }
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
     doc.body.appendChild(canvas);

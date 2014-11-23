@@ -9,7 +9,7 @@ var STEP_X=95;//move 95 pixels horizontally across the canvas
 
 
 var BUG_HEIGHT=70;
-var BUG_WIDTH=100;
+var BUG_WIDTH=101;
 var BUG_SPEED =[5,3,2]; //randomly choose bug speeds from this array
 var MAX_BUGS=3;
 var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
@@ -26,7 +26,11 @@ var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the ri
 var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically 
 
 
-
+//Gems
+var MAX_GEMS=3;
+var GEM_COLORS=['Blue','Green','Orange'];
+var GEM_WIDTH=101;
+var GEM_Y_LOCATIONS=[25+BLOCK_HEIGHT,110+BLOCK_HEIGHT,190+BLOCK_HEIGHT];//possible locations where the gems can be
 
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
@@ -53,7 +57,7 @@ Enemy.prototype.update = function(dt) {
     if (this.x>=CANVAS_WIDTH) {
         this.x=0; // reset enemy to the left of the canvas
         //generate a random number between 0 and 3 to decide what row the bug re-appears from
-        var rand1=Math.floor(Math.random() *3 + 0);
+        var rand1=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
         if (rand1==0) this.y=65;
         if (rand1==1) this.y=145;
         if (rand1==2) this.y=225;
@@ -116,6 +120,35 @@ Player.prototype.update = function(dt) {
             //if (LIVES==0) ctx.drawImage('images/gameover1.png',0,0);
         }
     }
+
+    //Gem Collision
+    //loop through all gems
+
+    for (gem in allGems){
+        //console.log("collision");    
+
+        gem1={
+             'top':   allGems[gem].y+25,
+             'bottom': allGems[gem].y+80,//block height is gem height..so if player is in that block
+             'right': allGems[gem].x+GEM_WIDTH,
+             'left': allGems[gem].x
+        };
+        if(allGems[gem].visible){
+            if(!(player1.left>(gem1.right) || player1.right < (gem1.left) ||player1.top>(gem1.bottom) || player1.bottom <(gem1.top))) {
+                //console.log("collision");    
+               //increase score
+                SCORE++;
+
+                //UPDATE SCORE
+                $(".life").append(SCORE);
+                //hide gem
+                allGems[gem].visible=false;
+                
+
+                //if (LIVES==0) ctx.drawImage('images/gameover1.png',0,0);
+            }
+        }
+    }
 }
 
 Player.prototype.render = function() {
@@ -150,24 +183,97 @@ Player.prototype.handleInput = function(keycode) {
     } 
 }
 
+var Gems =function(color,x,y,visible){
+    this.sprite='images/Gem'+color+'.png';
+    this.x=x;
+    this.y=y;
+    this.visible=true;
+}
+
+Gems.prototype.update=function(){
+    //if all gems taken, generate new positions and colors for gems
+    var allgone=false;
+    for (g in allGems) {
+        allgone=(!allGems[g].visible) ? true : false;
+    }
+    //console.log(allgone);
+    if (allgone){//generate random positions and make gems visible
+        for ( g in allGems){
+            var randX=generateRandom(5,0);//Math.floor(Math.random() *5 + 0);    
+            //select random y position i.e what row to show bug in
+            var randY=generateRandom(3,0);Math.floor(Math.random() *3 + 0);
+            //select random color for the bug
+            var rand2=generateRandom(3,0)//Math.floor(Math.random() *3 + 0);
+            allGems[g].visible=true;
+            allGems[g].x=randX*GEM_WIDTH;
+            allGems[g].y=GEM_Y_LOCATIONS[randY];
+            allGems[g].sprite='images/Gem'+GEM_COLORS[rand2]+'.png';
+        }    
+    //var gem1= new Gems(GEM_WIDTHM_COLORS[rand2],randX*GEM_WIDTH,GEM_Y_LOCATIONS[randY],true);
+    }
+
+
+}
+
+Gems.prototype.render=function(){
+    if(this.visible) ctx.drawImage(Resources.get(this.sprite), this.x, this.y,100,100);
+    //ctx.drawImage(Resources.get(this.sprite), 0, GEM_Y_LOCATIONS[0],100,100);
+    //ctx.drawImage(Resources.get(this.sprite), GEM_WIDTH, GEM_Y_LOCATIONS[1],100,100);
+    //ctx.drawImage(Resources.get(this.sprite), GEM_WIDTH*2, GEM_Y_LOCATIONS[2],100,100);
+    /*
+    ctx.rect(this.x,(this.y+25),101,80);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+*/
+    //alert(this.sprite);
+}
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);
 var allEnemies= [];
-
+var allGems=[];
 instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
 
 function instantiateGameObjects() {
 
     for (i=0; i<MAX_BUGS;i++) {
         //generate a random starting position in the row
-        var rand1=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
+        var randX=generateRandom((CANVAS_WIDTH-BUG_WIDTH),0);//Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
         //select a random speed for the bug
-        var rand11=Math.floor(Math.random() *3 + 0);
-        var enemy1= new Enemy(rand1,65,BUG_SPEED[rand11]);
+        var rand2=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        
+        //select random y position i.e what row to show bug in
+        var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        var y;
+        if (randY==0) y=65;
+        if (randY==1) y=145;
+        if (randY==2) y=225;
+        
+        var enemy1= new Enemy(randX,y,BUG_SPEED[rand2]);
         allEnemies.push(enemy1);
     }
+
+    for (i=0; i<MAX_GEMS;i++) {
+        //generate a random x position in the row
+        var randX=generateRandom(4,0);//Math.floor(Math.random() *4 + 0);
+        
+        //select random y position i.e what row to show gem in
+        var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        /*var y;
+        if (rand3==0) y=65;
+        if (rand3==1) y=145;
+        if (rand3==2) y=225;    
+        */
+        //select random color for the GEM
+        var rand2=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+
+        var gem1= new Gems(GEM_COLORS[rand2],randX*GEM_WIDTH,GEM_Y_LOCATIONS[randY],true);
+        allGems.push(gem1);
+    }
+
+
 }
 /*var rand2=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
 var rand22=Math.floor(Math.random() *3 + 0);
@@ -189,7 +295,9 @@ allEnemies.push(enemy3);
 
 
 
-
+function generateRandom(x,y){
+    return Math.floor(Math.random() *x + y);
+}
 
 
 

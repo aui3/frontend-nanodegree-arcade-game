@@ -17,4 +17,13 @@ body {
 #canvas {
 	flex-direction: column;
 }
+.score {
+
+	text-align: left;
+	margin: 40px 0px 0px 40px;
+}
+.game-resouces {
+	dispaly: flex;
+	flex-direction: column;
+}
 

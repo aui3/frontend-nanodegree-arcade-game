@@ -140,7 +140,7 @@ Player.prototype.update = function(dt) {
                 SCORE++;
 
                 //UPDATE SCORE
-                $(".life").append(SCORE);
+                $("#score").html('<p>'+SCORE+'</p>');
                 //hide gem
                 allGems[gem].visible=false;
                 

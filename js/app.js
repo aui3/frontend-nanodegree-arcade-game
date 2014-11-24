@@ -16,7 +16,7 @@ var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertica
 
 var SCORE=0;
 var LIVES=3;
-
+var PAUSED=false;
 //initial position of player
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=400;
@@ -53,7 +53,8 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     
-    this.x+=this.speed;
+    
+    if (!PAUSED) this.x+=this.speed;
     
     if (this.x>=CANVAS_WIDTH) {
         this.x=0; // reset enemy to the left of the canvas
@@ -118,7 +119,7 @@ Player.prototype.update = function(dt) {
             LIVES=LIVES-1;
             $(".life1:last").detach();
 
-            //if (LIVES==0) ctx.drawImage('images/gameover1.png',0,0);
+            
         }
     }
 
@@ -154,6 +155,7 @@ Player.prototype.update = function(dt) {
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (LIVES==0) ctx.drawImage(Resources.get('images/gameover.png'),0,0);
     /*
     ctx.rect(this.x+15,(this.y+60),75,80);
     ctx.lineWidth = 1;
@@ -163,25 +165,27 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(keycode) {
 
     var newpos;
-    //ensure that the player stays in bound
-    switch (keycode) {
-        case 'up':
-            newpos=this.y-STEP_Y;
-            this.y= (newpos>BLOCK_HEIGHT) ? newpos : BLOCK_HEIGHT;
-            break;
-        case 'down':
-            newpos=this.y+STEP_Y;
-            this.y= (newpos<=INITIAL_Y_PLAYER) ? newpos : INITIAL_Y_PLAYER;  
-            break;
-        case 'left':
-            newpos=this.x-STEP_X;
-            if(newpos>=0) this.x=newpos;
-            break;
-        case 'right':
-            newpos=this.x+STEP_X;
-            //incorpotate for the point where the actual image starts
-            if((newpos+SLIDE_PLAYER_X +PLAYER_WIDTH)<=CANVAS_WIDTH) this.x=newpos;   
-    } 
+    if(!PAUSED){
+        //ensure that the player stays in bound
+        switch (keycode) {
+            case 'up':
+                newpos=this.y-STEP_Y;
+                this.y= (newpos>BLOCK_HEIGHT) ? newpos : BLOCK_HEIGHT;
+                break;
+            case 'down':
+                newpos=this.y+STEP_Y;
+                this.y= (newpos<=INITIAL_Y_PLAYER) ? newpos : INITIAL_Y_PLAYER;  
+                break;
+            case 'left':
+                newpos=this.x-STEP_X;
+                if(newpos>=0) this.x=newpos;
+                break;
+            case 'right':
+                newpos=this.x+STEP_X;
+                //incorpotate for the point where the actual image starts
+                if((newpos+SLIDE_PLAYER_X +PLAYER_WIDTH)<=CANVAS_WIDTH) this.x=newpos;   
+        } 
+    }
 }
 
 var Gems =function(color,x,y,visible){
@@ -301,7 +305,18 @@ function generateRandom(x,y){
     return Math.floor(Math.random() *x + y);
 }
 
+function gamePause(){
 
+    if($("#pausePlayButton").html()=='Play'){
+        PAUSED=false;
+        $("#pausePlayButton").html('Pause');        
+    }
+    else if($("#pausePlayButton").html()=='Pause'){
+        PAUSED=true;
+        $("#pausePlayButton").html('Play');
+    }
+    
+}
 
 
 // This listens for key presses and sends the keys to your

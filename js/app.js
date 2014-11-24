@@ -10,7 +10,7 @@ var STEP_X=95;//move 95 pixels horizontally across the canvas
 
 var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
-var BUG_SPEED =[5,3,2]; //randomly choose bug speeds from this array
+var BUG_SPEED =[3,4,2]; //randomly choose bug speeds from this array
 var MAX_BUGS=3;
 var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
 
@@ -107,11 +107,11 @@ Player.prototype.update = function(dt) {
         bug={
              'top':   allEnemies[enemyBug].y+SLIDE_BUG_Y,
              'bottom': allEnemies[enemyBug].y+SLIDE_BUG_Y+BUG_HEIGHT,
-             'right': allEnemies[enemyBug].x+BUG_WIDTH,
-             'left': allEnemies[enemyBug].x
+             'right': allEnemies[enemyBug].x+BUG_WIDTH-20,
+             'left': allEnemies[enemyBug].x+20
         };
 
-        if(!(player1.left>(bug.right-10) || player1.right < (bug.left+10) ||player1.top>(bug.bottom-10) || player1.bottom <(bug.top+10))) {
+        if(!(player1.left>(bug.right-10) || player1.right < (bug.left+10) ||player1.top>=(bug.bottom-10) || player1.bottom <=(bug.top+10))) {
             //reset to initial player position
             this.x=INITIAL_X_PLAYER;
             this.y=INITIAL_Y_PLAYER;
@@ -155,7 +155,7 @@ Player.prototype.update = function(dt) {
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    if (LIVES==0) ctx.drawImage(Resources.get('images/gameover.png'),0,0);
+    //if (LIVES==0) ctx.drawImage(Resources.get('images/gameover.png'),0,0);
     /*
     ctx.rect(this.x+15,(this.y+60),75,80);
     ctx.lineWidth = 1;
@@ -318,6 +318,21 @@ function gamePause(){
     
 }
 
+function gameReset(){
+
+    var HTML_Life="<img class='life1' src='images/Heart.png' height='50' width='50'>";
+    livesToDraw=MAX_LIFE-LIVES;
+    console.log(livesToDraw);
+    for (i=0;i<livesToDraw;i++){
+        $(".life").append(HTML_Life);
+    }
+    SCORE=0;
+    LIVES=3;
+    $("#score").html('<p>'+SCORE+'</p>');
+    player.x=INITIAL_X_PLAYER;
+    player.y=INITIAL_Y_PLAYER;
+    
+}
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

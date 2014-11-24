@@ -14,15 +14,15 @@
  * a little simpler to work with.
  */
 
-
+var CANVAS_HEIGHT=606;
+    var CANVAS_WIDTH=505;
+    var MAX_LIFE=3;
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
-    var CANVAS_HEIGHT=606;
-    var CANVAS_WIDTH=505;
-    var MAX_LIFE=3;
+    
     //load heart image to represent life
     var HTML_Life="<img class='life1' src='images/Heart.png' height='50' width='50'>"; 
     

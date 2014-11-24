@@ -42,6 +42,7 @@ var Enemy = function(x,y,speed) {
     this.x=x;
     this.y=y;
     this.speed=speed;
+    
 }
 
 // Update the enemy's position, required method for game
@@ -128,7 +129,7 @@ Player.prototype.update = function(dt) {
         //console.log("collision");    
 
         gem1={
-             'top':   allGems[gem].y+25,
+             'top':   allGems[gem].y+40,//adjust for start for gem image..25
              'bottom': allGems[gem].y+80,//block height is gem height..so if player is in that block
              'right': allGems[gem].x+GEM_WIDTH,
              'left': allGems[gem].x
@@ -192,16 +193,17 @@ var Gems =function(color,x,y,visible){
 
 Gems.prototype.update=function(){
     //if all gems taken, generate new positions and colors for gems
-    var allgone=false;
+    var allgone=0;
     for (g in allGems) {
-        allgone=(!allGems[g].visible) ? true : false;
+        //allgone=(!allGems[g].visible) ? true : false;
+        if (allGems[g].visible==false) allgone++;
     }
     //console.log(allgone);
-    if (allgone){//generate random positions and make gems visible
+    if (allgone==allGems.length){//generate random positions and make gems visible
         for ( g in allGems){
             var randX=generateRandom(5,0);//Math.floor(Math.random() *5 + 0);    
             //select random y position i.e what row to show bug in
-            var randY=generateRandom(3,0);Math.floor(Math.random() *3 + 0);
+            var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
             //select random color for the bug
             var rand2=generateRandom(3,0)//Math.floor(Math.random() *3 + 0);
             allGems[g].visible=true;

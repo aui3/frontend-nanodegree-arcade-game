@@ -135,6 +135,8 @@ Player.prototype.update = function(dt) {
                 $("#restartStartButton").prop("disabled",false);
                 $("#pausePlayButton").prop("disabled",true);
                 GAME_OVER=true;
+                ctx.font="40px Georgia";    
+                ctx.fillText("GAME OVER",50,75);
 
             }
             
@@ -240,7 +242,8 @@ Gems.prototype.update=function(){
 }
 
 Gems.prototype.render=function(){
-    if(this.visible) ctx.drawImage(Resources.get(this.sprite), this.x, this.y,100,100);
+    if(!GAME_OVER)
+        if(this.visible) ctx.drawImage(Resources.get(this.sprite), this.x, this.y,100,100);
     //ctx.drawImage(Resources.get(this.sprite), 0, GEM_Y_LOCATIONS[0],100,100);
     //ctx.drawImage(Resources.get(this.sprite), GEM_WIDTH, GEM_Y_LOCATIONS[1],100,100);
     //ctx.drawImage(Resources.get(this.sprite), GEM_WIDTH*2, GEM_Y_LOCATIONS[2],100,100);

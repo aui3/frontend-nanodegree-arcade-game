@@ -12,7 +12,12 @@ body {
 }
 .life {
 	text-align: left;
+	display:flex;
+	flex-direction:row;
 	margin: 40px 0px 0px 40px;
+}
+.life1{
+	display:none;
 }
 #canvas {
 	flex-direction: column;
@@ -26,4 +31,15 @@ body {
 	dispaly: flex;
 	flex-direction: column;
 }
+.buttonControls {
+	text-align: left;
+	margin: 40px 0px 0px 40px;
+}
+.timer {
+	text-align: left;
+	margin: 40px 0px 0px 40px;
 
+}
+#restart{
+	display:none;
+}

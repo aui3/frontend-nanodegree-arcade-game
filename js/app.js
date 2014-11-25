@@ -16,7 +16,7 @@ var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertica
 
 var SCORE=0;
 var LIVES=3;
-var PAUSED=false;
+var PAUSED=true;
 //initial position of player
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=400;
@@ -24,13 +24,20 @@ var PLAYER_HEIGHT=80;
 var PLAYER_WIDTH=75;
 var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the right horizontally
 var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically 
-
+var GAME_OVER=false;
 
 //Gems
 var MAX_GEMS=3;
 var GEM_COLORS=['Blue','Green','Orange'];
 var GEM_WIDTH=101;
 var GEM_Y_LOCATIONS=[25+BLOCK_HEIGHT,110+BLOCK_HEIGHT,190+BLOCK_HEIGHT];//possible locations where the gems can be
+
+
+var allEnemies= [];
+var allGems=[];
+
+//Timer for game loop
+var timerLoop=10;//set at 30 sec
 
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
@@ -68,7 +75,9 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    
+    if(!GAME_OVER)
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     /*ctx.rect(this.x,(this.y+75),101,70);
     ctx.lineWidth = 1;
     ctx.strokeStyle = 'black';
@@ -117,8 +126,17 @@ Player.prototype.update = function(dt) {
             this.y=INITIAL_Y_PLAYER;
              //decrease life hearts
             LIVES=LIVES-1;
-            $(".life1:last").detach();
+            //$(".life1:last").hide();
+            $(".life").find(":visible:last").hide();
+            if (LIVES==0){
 
+                PAUSED=true;
+                //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
+                $("#restartStartButton").prop("disabled",false);
+                $("#pausePlayButton").prop("disabled",true);
+                GAME_OVER=true;
+
+            }
             
         }
     }
@@ -237,11 +255,11 @@ Gems.prototype.render=function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);
-var allEnemies= [];
-var allGems=[];
-instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
-
+//if(!PAUSED){
+    var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);
+    
+    instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
+//}
 function instantiateGameObjects() {
 
     for (i=0; i<MAX_BUGS;i++) {
@@ -322,18 +340,81 @@ function gameReset(){
 
     var HTML_Life="<img class='life1' src='images/Heart.png' height='50' width='50'>";
     livesToDraw=MAX_LIFE-LIVES;
-    console.log(livesToDraw);
-    for (i=0;i<livesToDraw;i++){
-        $(".life").append(HTML_Life);
-    }
+    //console.log(MAX_LIFE);
+    //for (i=0;i<MAX_LIFE;i++){
+      //  $(".life").append(HTML_Life);
+    //}
+    $(".life1").show();
+
     SCORE=0;
     LIVES=3;
-    $("#score").html('<p>'+SCORE+'</p>');
+    $("#score").html("<p id='score'>"+SCORE+'</p>');
     player.x=INITIAL_X_PLAYER;
     player.y=INITIAL_Y_PLAYER;
-    
+    //handleTimer('pause');
+}
+function displayTimer(){
+    if(!PAUSED){//if game is paused do not decrement the timer
+        
+        timerLoop--;
+        $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
+        if (timerLoop==0){//game over
+
+          PAUSED=true;
+          //var restartButtonHTML=
+          //$(".buttonControls").append(restartButtonHTML);
+          //$("#restart").show();
+          $("#restartStartButton").prop("disabled",false);
+          $("#pausePlayButton").prop("disabled",true);
+
+          //disbale pause and reset
+
+            
+        } 
+    }
+
+
 }
 
+function gameStartRestart(){
+     gameReset();//reset game
+     timerLoop=10; //resetTimer
+     PAUSED=false;
+     GAME_OVER=false;
+     //update Timer
+     $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
+     //empty all gems and enemies array and recreate them
+     while(allEnemies.length > 0) {
+        allEnemies.pop();
+    }
+    while(allGems.length > 0) {
+          allGems.pop();
+    }       
+
+    instantiateGameObjects();//recreate bugs and gems
+    
+    //enable reset pause
+    //$("#reset").prop("disabled",false);
+    $("#pausePlayButton").prop("disabled",false);
+    //$("#restart").hide();
+    //$("#restartStart")
+    console.log("here");
+    if($("#restartStartButton").html()=="Start"){
+        //PAUSED=false;
+        $("#restartStartButton").html("Restart");
+        $("#restartStartButton").prop("disabled",true);        
+    }
+    else if($("#restartStartButton").html()=='ReStart'){
+        //PAUSED=true;
+        $("#restartStartButton").html('Start');
+    }    
+
+
+
+    
+
+
+}
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {

@@ -17,11 +17,20 @@
     	
     </div>
     <div class="game-resources">
-        <div class="life">Lives: </div>
+        <div class="timer"> <h1>Timer:<p id="countdown"></p></h1></div>
+        <div class="life">Lives: 
+            <img class='life1' src='images/Heart.png' height='50' width='50'>
+            <img class='life1' src='images/Heart.png' height='50' width='50'>
+            <img class='life1' src='images/Heart.png' height='50' width='50'>
+        </div>
         <div class="score">Score: <p id="score"></p></div>
         <div class="buttonControls"> 
+            
+            <button type="button" id="restartStartButton" onClick="gameStartRestart()">Start</button>
             <button type="button" id="pausePlayButton" onClick="gamePause()">Pause</button>
-            <button type="button" id="reset" onClick="gameReset()">Reset </button>
+            <!--<button type="button" id="reset" onClick="gameReset()">Reset </button>-->
+            
+            
         </div>
 
     </div>

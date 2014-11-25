@@ -15,8 +15,10 @@
  */
 
 var CANVAS_HEIGHT=606;
-    var CANVAS_WIDTH=505;
-    var MAX_LIFE=3;
+var CANVAS_WIDTH=505;
+var MAX_LIFE=3;
+var loopTimerID;//id of the timer that controls how long one game loop runs
+
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -32,12 +34,15 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
     
-    //load all heart images
-    for (i=0;i<MAX_LIFE;i++){
+    //set timer
+    loopTimerID=setInterval(displayTimer,1000);
+    $("#pausePlayButton").prop("disabled",true);
+    //load all heart images..do this in gamestartrestart
+    /*for (i=0;i<MAX_LIFE;i++){
         $(".life").append(HTML_Life);
     }
-
-
+    $("#countdown").append(timerLoop);
+*/
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
     //doc.body.appendChild(canvas);
@@ -154,7 +159,7 @@ var Engine = (function(global) {
             }
         }
 
-
+        //ctx.drawImage(Resources.get('images/gameover.png'),0,100,CANVAS_WIDTH,CANVAS_HEIGHT);    
         renderEntities();
     }
 

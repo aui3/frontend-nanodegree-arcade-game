@@ -174,6 +174,7 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.render = function() {
+    
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     //if (LIVES==0) ctx.drawImage(Resources.get('images/gameover.png'),0,0);
     /*
@@ -399,17 +400,19 @@ function gameStartRestart(){
     //enable reset pause
     //$("#reset").prop("disabled",false);
     $("#pausePlayButton").prop("disabled",false);
+    $("#restartStartButton").prop("disabled",true);
     //$("#restart").hide();
     //$("#restartStart")
-    console.log("here");
+    //console.log("here");
     if($("#restartStartButton").html()=="Start"){
         //PAUSED=false;
         $("#restartStartButton").html("Restart");
-        $("#restartStartButton").prop("disabled",true);        
+        //$("#restartStartButton").prop("disabled",true);        
     }
     else if($("#restartStartButton").html()=='ReStart'){
-        //PAUSED=true;
+        //PAUSED=true;  
         $("#restartStartButton").html('Start');
+        //$("#restartStartButton").prop("disabled",true);
     }    
 
 

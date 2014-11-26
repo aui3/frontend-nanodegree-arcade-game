@@ -1,4 +1,6 @@
-// Enemies our player must avoid bug is 100x 70
+/*************************/
+//      GLOBAL VARIABLES
+/*************************/
 var CANVAS_WIDTH=505;
 
 var BLOCK_HEIGHT=80;//height of each element (grass,water,block/road) in the map
@@ -10,13 +12,15 @@ var STEP_X=95;//move 95 pixels horizontally across the canvas
 
 var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
-var BUG_SPEED =[3,4,2]; //randomly choose bug speeds from this array
+var BUG_SPEED =[80,100,120]; //randomly choose bug speeds from this array
 var MAX_BUGS=3;
 var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
 
 var SCORE=0;
+var HIGH_SCORE=0;
 var LIVES=3;
 var PAUSED=true;
+
 //initial position of player
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=400;
@@ -27,7 +31,7 @@ var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vert
 var GAME_OVER=false;
 
 //Gems
-var MAX_GEMS=3;
+var MAX_GEMS=3;//this is the maximum number of gems at any given time. When player takes all gems displayed, new ones are shown 
 var GEM_COLORS=['Blue','Green','Orange'];
 var GEM_WIDTH=101;
 var GEM_Y_LOCATIONS=[25+BLOCK_HEIGHT,110+BLOCK_HEIGHT,190+BLOCK_HEIGHT];//possible locations where the gems can be
@@ -37,7 +41,13 @@ var allEnemies= [];
 var allGems=[];
 
 //Timer for game loop
-var timerLoop=10;//set at 30 sec
+var MAX_TIME=30
+var timerLoop=MAX_TIME;//set at 30 sec
+
+
+/*************************/
+//      ENEMY CLASS
+/*************************/
 
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
@@ -58,10 +68,10 @@ var Enemy = function(x,y,speed) {
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
-    // all computers.
+    // all com          puters.
     
     
-    if (!PAUSED) this.x+=this.speed;
+    if (!PAUSED) this.x=this.x+this.speed*dt;
     
     if (this.x>=CANVAS_WIDTH) {
         this.x=0; // reset enemy to the left of the canvas
@@ -75,24 +85,19 @@ Enemy.prototype.update = function(dt) {
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    
-    if(!GAME_OVER)
+    if(!GAME_OVER)//if game is not over, draw Image
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    /*ctx.rect(this.x,(this.y+75),101,70);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'black';
-    ctx.stroke();*/
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+/*************************/
+//      PLAYER CLASS
+/*************************/
 var Player=function(x,y){
     this.x=x;
     this.y=y;
     this.sprite='images/char-cat-girl.png';
-
 }
+
 Player.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
@@ -126,14 +131,15 @@ Player.prototype.update = function(dt) {
             this.y=INITIAL_Y_PLAYER;
              //decrease life hearts
             LIVES=LIVES-1;
-            //$(".life1:last").hide();
-            $(".life").find(":visible:last").hide();
-            if (LIVES==0){
-
-                PAUSED=true;
+            //find the last visible child (heart) and make it invisible
+            $(".life").find(":visible:last").hide(); 
+            if (LIVES==0) { //player has used all lives and the game loop is over
+                PAUSED=true; //to freeze game objects
                 //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
+                //disable Pause/Play Button and enable Start/restart Button
                 $("#restartStartButton").prop("disabled",false);
                 $("#pausePlayButton").prop("disabled",true);
+                
                 GAME_OVER=true;
                 ctx.font="40px Georgia";    
                 ctx.fillText("GAME OVER",50,75);
@@ -192,12 +198,17 @@ Player.prototype.handleInput = function(keycode) {
         } 
     }
 }
-
+/*************************/
+//      GEMS CLASS
+//player must collide with gems to score points
+/*************************/
 var Gems =function(color,x,y,visible){
     this.sprite='images/Gem'+color+'.png';
     this.x=x;
     this.y=y;
-    this.visible=true;
+    this.visible=true;//gems are hidden when player collides with them
+                    //and are re-positioned and re-appear when all displayed
+                    // gems are taken by player
 }
 
 Gems.prototype.update=function(){
@@ -318,17 +329,23 @@ function displayTimer(){
         $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>'); 
         
         if (timerLoop==0) { //game loop is over
-          PAUSED=true;//control variable to stop the motion game objects is set to true
-          //disable  Play/Pause Button and Enable Start/Restart Button
-          $("#restartStartButton").prop("disabled",false);
-          $("#pausePlayButton").prop("disabled",true);
+            PAUSED=true;//control variable to stop the motion game objects is set to true
+            //disable  Play/Pause Button and Enable Start/Restart Button
+            $("#restartStartButton").prop("disabled",false);
+            $("#pausePlayButton").prop("disabled",true);
+            //if high_score greater than player score, update High Score
+            if (SCORE>HIGH_SCORE) {
+                HIGH_SCORE=SCORE;
+                $("#high-score").show();//("display:block");
+                $("#scoreHigh").html(HIGH_SCORE);
+            }
         } 
     }
 }
 
 function gameStartRestart(){
      gameReset();//reset game
-     timerLoop=10; //resetTimer
+     timerLoop=MAX_TIME; //resetTimer
      PAUSED=false;
      GAME_OVER=false;
     //update Timer

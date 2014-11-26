@@ -113,6 +113,7 @@ Player.prototype.update = function(dt) {
         right: the x-value of the right side of the rectangle
         left:  the x-value of the left side of the rectangle
     };*/
+    
     player1= {
          'top':   this.y+SLIDE_PLAYER_Y,
          'bottom': this.y+SLIDE_PLAYER_Y+PLAYER_HEIGHT,
@@ -145,8 +146,8 @@ Player.prototype.update = function(dt) {
                 
                 GAME_OVER=true;
                 LIVES_UP=true;
-                ctx.font="40px Georgia";    
-                ctx.fillText("GAME OVER",50,75);
+                //ctx.font="40px Georgia";    
+                //ctx.fillText("GAME OVER",50,75);
             }       
         }
     }
@@ -167,7 +168,9 @@ Player.prototype.update = function(dt) {
                 $("#score").html('<p>'+SCORE+'</p>');
                 //hide gem indicating it has been taken by player
                 allGems[gem].visible=false;
-                //if (LIVES==0) ctx.drawImage('images/gameover1.png',0,0);
+                //play sound
+                var audio = document.getElementById("audio");
+        audio.play();
             }
         }
     }

@@ -44,6 +44,9 @@ var allGems=[];
 var MAX_TIME=30
 var timerLoop=MAX_TIME;//set at 30 sec
 
+//FAIL STATES
+var TIMES_UP=false;//game finished because times up
+var LIVES_UP=false;//game finished because lives up
 
 /*************************/
 //      ENEMY CLASS
@@ -141,6 +144,7 @@ Player.prototype.update = function(dt) {
                 $("#pausePlayButton").prop("disabled",true);
                 
                 GAME_OVER=true;
+                LIVES_UP=true;
                 ctx.font="40px Georgia";    
                 ctx.fillText("GAME OVER",50,75);
             }       
@@ -301,10 +305,12 @@ function gamePause(){
 
     if($("#pausePlayButton").html()=='Play'){
         PAUSED=false;
+        ctx.globalAlpha=1;
         $("#pausePlayButton").html('Pause');        
     }
     else if($("#pausePlayButton").html()=='Pause'){
         PAUSED=true;
+        ctx.globalAlpha=0.5;
         $("#pausePlayButton").html('Play');
     }    
 }
@@ -329,7 +335,11 @@ function displayTimer(){
         $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>'); 
         
         if (timerLoop==0) { //game loop is over
+            TIMES_UP=true;
             PAUSED=true;//control variable to stop the motion game objects is set to true
+            GAME_OVER=true; //bugs and gems to stop displaying
+            player.x=INITIAL_X_PLAYER;
+            player.y=INITIAL_Y_PLAYER;
             //disable  Play/Pause Button and Enable Start/Restart Button
             $("#restartStartButton").prop("disabled",false);
             $("#pausePlayButton").prop("disabled",true);
@@ -348,6 +358,8 @@ function gameStartRestart(){
      timerLoop=MAX_TIME; //resetTimer
      PAUSED=false;
      GAME_OVER=false;
+     TIMES_UP=false;
+     LIVES_UP=false;
     //update Timer
     $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
     //empty all gems and enemies array and recreate them

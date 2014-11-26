@@ -158,6 +158,22 @@ var Engine = (function(global) {
                 //ctx.fillText("O",col*101,row*83);
             }
         }
+        if (GAME_OVER) {
+
+                ctx.font="40px Georgia";
+                var message="GAME OVER! %msg%";    
+                var finalMessage;
+                //ctx.fillText("GAME OVER",100,CANVAS_HEIGHT/2);
+                if(TIMES_UP){
+                   //ctx.fillText("TIMES UP!!",100,CANVAS_HEIGHT/2);
+                   finalMessage=message.replace("%msg%", "TIMES UP");     
+                }
+                if(LIVES_UP){
+                   finalMessage=message.replace("%msg%", "LIVES UP");
+                   //ctx.fillText("RAN OUT OF LIVES",100,CANVAS_HEIGHT/2);     
+                }
+                ctx.fillText(finalMessage,50,CANVAS_HEIGHT/2);
+        }
 
         //ctx.drawImage(Resources.get('images/gameover.png'),0,100,CANVAS_WIDTH,CANVAS_HEIGHT);    
         renderEntities();

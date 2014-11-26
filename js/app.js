@@ -146,6 +146,15 @@ Player.prototype.update = function(dt) {
                 
                 GAME_OVER=true;
                 LIVES_UP=true;
+                 //display high score   
+                if (SCORE>HIGH_SCORE) {
+                 //alert("hello");
+                    HIGH_SCORE=SCORE;
+                    $("#high-score").show();//("display:block");
+                    $("#scoreHigh").html(HIGH_SCORE);
+            }
+
+
                 //ctx.font="40px Georgia";    
                 //ctx.fillText("GAME OVER",50,75);
             }       
@@ -170,7 +179,7 @@ Player.prototype.update = function(dt) {
                 allGems[gem].visible=false;
                 //play sound
                 var audio = document.getElementById("audio");
-        audio.play();
+                audio.play();
             }
         }
     }
@@ -348,6 +357,7 @@ function displayTimer(){
             $("#pausePlayButton").prop("disabled",true);
             //if high_score greater than player score, update High Score
             if (SCORE>HIGH_SCORE) {
+                alert("hello");
                 HIGH_SCORE=SCORE;
                 $("#high-score").show();//("display:block");
                 $("#scoreHigh").html(HIGH_SCORE);

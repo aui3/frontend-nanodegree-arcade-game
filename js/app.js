@@ -137,36 +137,26 @@ Player.prototype.update = function(dt) {
                 GAME_OVER=true;
                 ctx.font="40px Georgia";    
                 ctx.fillText("GAME OVER",50,75);
-
-            }
-            
+            }       
         }
     }
-
-    //Gem Collision
+    //Check for Gem Collision with player
     //loop through all gems
-
-    for (gem in allGems){
-        //console.log("collision");    
-
+    for (gem in allGems) {
         gem1={
              'top':   allGems[gem].y+40,//adjust for start for gem image..25
              'bottom': allGems[gem].y+80,//block height is gem height..so if player is in that block
              'right': allGems[gem].x+GEM_WIDTH,
              'left': allGems[gem].x
         };
-        if(allGems[gem].visible){
-            if(!(player1.left>(gem1.right) || player1.right < (gem1.left) ||player1.top>(gem1.bottom) || player1.bottom <(gem1.top))) {
-                //console.log("collision");    
+        if(allGems[gem].visible){ //if the hit gem is visible
+            if(!(player1.left>(gem1.right) || player1.right < (gem1.left) ||player1.top>(gem1.bottom) || player1.bottom <(gem1.top))) {    
                //increase score
-                SCORE++;
-
+                SCORE+=5;
                 //UPDATE SCORE
                 $("#score").html('<p>'+SCORE+'</p>');
-                //hide gem
+                //hide gem indicating it has been taken by player
                 allGems[gem].visible=false;
-                
-
                 //if (LIVES==0) ctx.drawImage('images/gameover1.png',0,0);
             }
         }
@@ -174,15 +164,9 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.render = function() {
-    
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    //if (LIVES==0) ctx.drawImage(Resources.get('images/gameover.png'),0,0);
-    /*
-    ctx.rect(this.x+15,(this.y+60),75,80);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'black';
-    ctx.stroke();*/
 }
+
 Player.prototype.handleInput = function(keycode) {
 
     var newpos;
@@ -217,69 +201,65 @@ var Gems =function(color,x,y,visible){
 }
 
 Gems.prototype.update=function(){
-    //if all gems taken, generate new positions and colors for gems
+    
+    //if all gems taken i.e. not visible, generate new positions and colors for gems and make them visible
     var allgone=0;
     for (g in allGems) {
-        //allgone=(!allGems[g].visible) ? true : false;
         if (allGems[g].visible==false) allgone++;
     }
-    //console.log(allgone);
+   
     if (allgone==allGems.length){//generate random positions and make gems visible
         for ( g in allGems){
-            var randX=generateRandom(5,0);//Math.floor(Math.random() *5 + 0);    
+            //select random x position i.e one of the five blocks in a row
+            var randX=generateRandom(5,0);    
             //select random y position i.e what row to show bug in
-            var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+            var randY=generateRandom(3,0);
             //select random color for the bug
-            var rand2=generateRandom(3,0)//Math.floor(Math.random() *3 + 0);
+            var rand2=generateRandom(3,0);
+            
             allGems[g].visible=true;
             allGems[g].x=randX*GEM_WIDTH;
             allGems[g].y=GEM_Y_LOCATIONS[randY];
             allGems[g].sprite='images/Gem'+GEM_COLORS[rand2]+'.png';
         }    
-    //var gem1= new Gems(GEM_WIDTHM_COLORS[rand2],randX*GEM_WIDTH,GEM_Y_LOCATIONS[randY],true);
     }
-
-
 }
 
 Gems.prototype.render=function(){
-    if(!GAME_OVER)
+    if(!GAME_OVER)//if game is not over and Gem is visible draw it
         if(this.visible) ctx.drawImage(Resources.get(this.sprite), this.x, this.y,100,100);
-    //ctx.drawImage(Resources.get(this.sprite), 0, GEM_Y_LOCATIONS[0],100,100);
-    //ctx.drawImage(Resources.get(this.sprite), GEM_WIDTH, GEM_Y_LOCATIONS[1],100,100);
-    //ctx.drawImage(Resources.get(this.sprite), GEM_WIDTH*2, GEM_Y_LOCATIONS[2],100,100);
-    /*
-    ctx.rect(this.x,(this.y+25),101,80);
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-*/
-    //alert(this.sprite);
 }
+
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-//if(!PAUSED){
-    var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);
-    
-    instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
-//}
+var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);    
+instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
+
+
+/************************************/
+        //Helper Functions
+/************************************/        
+
+//Instantiate all enemy and gems
 function instantiateGameObjects() {
 
     for (i=0; i<MAX_BUGS;i++) {
         //generate a random starting position in the row
-        var randX=generateRandom((CANVAS_WIDTH-BUG_WIDTH),0);//Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
+        var randX=generateRandom((CANVAS_WIDTH-BUG_WIDTH),0);
         //select a random speed for the bug
-        var rand2=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        var rand2=generateRandom(3,0);
         
         //select random y position i.e what row to show bug in
-        var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        var randY=generateRandom(3,0);
         var y;
         if (randY==0) y=65;
         if (randY==1) y=145;
         if (randY==2) y=225;
         
-        var enemy1= new Enemy(randX,y,BUG_SPEED[rand2]);
+        //var enemy1= new Enemy(randX,y,BUG_SPEED[rand2]);
+        var enemy1= new Enemy(0,y,BUG_SPEED[rand2]);//start bugs from the left of the canvas, makes the game easy to play
         allEnemies.push(enemy1);
     }
 
@@ -289,11 +269,7 @@ function instantiateGameObjects() {
         
         //select random y position i.e what row to show gem in
         var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
-        /*var y;
-        if (rand3==0) y=65;
-        if (rand3==1) y=145;
-        if (rand3==2) y=225;    
-        */
+    
         //select random color for the GEM
         var rand2=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
 
@@ -303,30 +279,13 @@ function instantiateGameObjects() {
 
 
 }
-/*var rand2=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
-var rand22=Math.floor(Math.random() *3 + 0);
-var enemy2= new Enemy(rand2,145,BUG_SPEED[rand22]);
 
-var rand3=Math.floor((Math.random() *(CANVAS_WIDTH-BUG_WIDTH)) + 0);
-var rand33=Math.floor(Math.random() *3 + 0);
-var enemy3= new Enemy(rand3,225,BUG_SPEED[rand33]);
-//var enemy3=new Enemy(0,140)
-
-
-allEnemies.push(enemy1);
-allEnemies.push(enemy2);
-allEnemies.push(enemy3);
-//allEnemies.push(enemy3);
-*/
-
-
-
-
-
+//Generate a random Rumber between 'x' and 'y'
 function generateRandom(x,y){
     return Math.floor(Math.random() *x + y);
 }
 
+//Set the Pause variable and rename Pause/Play button
 function gamePause(){
 
     if($("#pausePlayButton").html()=='Play'){
@@ -336,48 +295,35 @@ function gamePause(){
     else if($("#pausePlayButton").html()=='Pause'){
         PAUSED=true;
         $("#pausePlayButton").html('Play');
-    }
-    
+    }    
 }
 
-function gameReset(){
 
-    var HTML_Life="<img class='life1' src='images/Heart.png' height='50' width='50'>";
-    livesToDraw=MAX_LIFE-LIVES;
-    //console.log(MAX_LIFE);
-    //for (i=0;i<MAX_LIFE;i++){
-      //  $(".life").append(HTML_Life);
-    //}
-    $(".life1").show();
-
-    SCORE=0;
+function gameReset() {
+    $(".life1").show();//show all lives
+    //reset SCORE & LIVES
+    SCORE=0; 
     LIVES=3;
-    $("#score").html("<p id='score'>"+SCORE+'</p>');
-    player.x=INITIAL_X_PLAYER;
+    $("#score").html("<p id='score'>"+SCORE+'</p>');//Display SCORE 
+    //reset player to original position
+    player.x=INITIAL_X_PLAYER; 
     player.y=INITIAL_Y_PLAYER;
-    //handleTimer('pause');
 }
-function displayTimer(){
-    if(!PAUSED){//if game is paused do not decrement the timer
-        
-        timerLoop--;
-        $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
-        if (timerLoop==0){//game over
 
-          PAUSED=true;
-          //var restartButtonHTML=
-          //$(".buttonControls").append(restartButtonHTML);
-          //$("#restart").show();
+//Game timer
+function displayTimer(){
+    if(!PAUSED) {//if game is paused do not decrement the timer
+        timerLoop--;
+        
+        $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>'); 
+        
+        if (timerLoop==0) { //game loop is over
+          PAUSED=true;//control variable to stop the motion game objects is set to true
+          //disable  Play/Pause Button and Enable Start/Restart Button
           $("#restartStartButton").prop("disabled",false);
           $("#pausePlayButton").prop("disabled",true);
-
-          //disbale pause and reset
-
-            
         } 
     }
-
-
 }
 
 function gameStartRestart(){
@@ -385,10 +331,10 @@ function gameStartRestart(){
      timerLoop=10; //resetTimer
      PAUSED=false;
      GAME_OVER=false;
-     //update Timer
-     $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
-     //empty all gems and enemies array and recreate them
-     while(allEnemies.length > 0) {
+    //update Timer
+    $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
+    //empty all gems and enemies array and recreate them
+    while(allEnemies.length > 0) {
         allEnemies.pop();
     }
     while(allGems.length > 0) {
@@ -397,29 +343,17 @@ function gameStartRestart(){
 
     instantiateGameObjects();//recreate bugs and gems
     
-    //enable reset pause
-    //$("#reset").prop("disabled",false);
+    //enable play/pause and disable start/restart button
     $("#pausePlayButton").prop("disabled",false);
     $("#restartStartButton").prop("disabled",true);
-    //$("#restart").hide();
-    //$("#restartStart")
-    //console.log("here");
-    if($("#restartStartButton").html()=="Start"){
-        //PAUSED=false;
-        $("#restartStartButton").html("Restart");
-        //$("#restartStartButton").prop("disabled",true);        
-    }
-    else if($("#restartStartButton").html()=='ReStart'){
-        //PAUSED=true;  
-        $("#restartStartButton").html('Start');
-        //$("#restartStartButton").prop("disabled",true);
-    }    
-
-
-
     
-
-
+    //switch the button labels between Start and Restart
+    if($("#restartStartButton").html()=="Start") {
+        $("#restartStartButton").html("Restart");        
+    }
+    else if($("#restartStartButton").html()=='ReStart') {
+        $("#restartStartButton").html('Start'); 
+    }    
 }
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

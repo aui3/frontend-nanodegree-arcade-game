@@ -344,8 +344,8 @@ function displayTimer(){
     if(!PAUSED) {//if game is paused do not decrement the timer
         timerLoop--;
         
-        $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>'); 
-        
+        $("#countdown").html("<h1 id='countdown1'>"+timerLoop+'</h1>'); 
+        //$("#countdown").append(timerLoop);
         if (timerLoop==0) { //game loop is over
             TIMES_UP=true;
             PAUSED=true;//control variable to stop the motion game objects is set to true
@@ -357,7 +357,7 @@ function displayTimer(){
             $("#pausePlayButton").prop("disabled",true);
             //if high_score greater than player score, update High Score
             if (SCORE>HIGH_SCORE) {
-                alert("hello");
+                //alert("hello");
                 HIGH_SCORE=SCORE;
                 $("#high-score").show();//("display:block");
                 $("#scoreHigh").html(HIGH_SCORE);
@@ -374,7 +374,8 @@ function gameStartRestart(){
      TIMES_UP=false;
      LIVES_UP=false;
     //update Timer
-    $("#countdown").html("<p id='countdown'>"+timerLoop+'</p>');
+    $("#countdown").html("<h1 id='countdown1'>"+timerLoop+'</h1>');
+    //$("#countdown").append(timerLoop);
     //empty all gems and enemies array and recreate them
     while(allEnemies.length > 0) {
         allEnemies.pop();

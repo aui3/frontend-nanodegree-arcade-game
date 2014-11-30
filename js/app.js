@@ -95,10 +95,12 @@ Enemy.prototype.render = function() {
 /*************************/
 //      PLAYER CLASS
 /*************************/
-var Player=function(x,y){
+var Player=function(x,y,maxLife,score){
     this.x=x;
     this.y=y;
     this.sprite='images/char-cat-girl.png';
+    this.maxLife=maxLife;
+    this.score=score
 }
 
 Player.prototype.update = function(dt) {
@@ -147,9 +149,9 @@ Player.prototype.update = function(dt) {
                 GAME_OVER=true;
                 LIVES_UP=true;
                  //display high score   
-                if (SCORE>HIGH_SCORE) {
+                if (this.score>HIGH_SCORE) {
                  //alert("hello");
-                    HIGH_SCORE=SCORE;
+                    HIGH_SCORE=this.score;
                     $("#high-score").show();//("display:block");
                     $("#scoreHigh").html(HIGH_SCORE);
             }
@@ -172,9 +174,9 @@ Player.prototype.update = function(dt) {
         if(allGems[gem].visible){ //if the hit gem is visible
             if(!(player1.left>(gem1.right) || player1.right < (gem1.left) ||player1.top>(gem1.bottom) || player1.bottom <(gem1.top))) {    
                //increase score
-                SCORE+=5;
+                this.score+=5;
                 //UPDATE SCORE
-                $("#score").html('<p>'+SCORE+'</p>');
+                $("#score").html('<p>'+this.score+'</p>');
                 //hide gem indicating it has been taken by player
                 allGems[gem].visible=false;
                 //play sound
@@ -261,7 +263,7 @@ Gems.prototype.render=function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);    
+var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER,5,0);    
 instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
 
 
@@ -331,9 +333,9 @@ function gamePause(){
 function gameReset() {
     $(".life1").show();//show all lives
     //reset SCORE & LIVES
-    SCORE=0; 
+    player.score=0; 
     LIVES=3;
-    $("#score").html("<p id='score'>"+SCORE+'</p>');//Display SCORE 
+    $("#score").html("<p id='score'>"+player.score+'</p>');//Display SCORE 
     //reset player to original position
     player.x=INITIAL_X_PLAYER; 
     player.y=INITIAL_Y_PLAYER;
@@ -356,9 +358,9 @@ function displayTimer(){
             $("#restartStartButton").prop("disabled",false);
             $("#pausePlayButton").prop("disabled",true);
             //if high_score greater than player score, update High Score
-            if (SCORE>HIGH_SCORE) {
+            if (player.score>HIGH_SCORE) {
                 //alert("hello");
-                HIGH_SCORE=SCORE;
+                HIGH_SCORE=player.score;
                 $("#high-score").show();//("display:block");
                 $("#scoreHigh").html(HIGH_SCORE);
             }

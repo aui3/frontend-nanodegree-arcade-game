@@ -99,6 +99,7 @@ var Player=function(x,y,maxLife,score){
     this.x=x;
     this.y=y;
     this.sprite='images/char-cat-girl.png';
+    this.lives=maxLife;
     this.maxLife=maxLife;
     this.score=score;
 
@@ -137,10 +138,10 @@ Player.prototype.update = function(dt) {
             this.x=INITIAL_X_PLAYER;
             this.y=INITIAL_Y_PLAYER;
              //decrease life hearts
-            LIVES=LIVES-1;
+            this.lives=this.lives-1;
             //find the last visible child (heart) and make it invisible
             $(".life").find(":visible:last").hide(); 
-            if (LIVES==0) { //player has used all lives and the game loop is over
+            if (this.lives==0) { //player has used all lives and the game loop is over
                 PAUSED=true; //to freeze game objects
                 //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
                 //disable Pause/Play Button and enable Start/restart Button
@@ -333,9 +334,9 @@ function gamePause(){
 
 function gameReset() {
     $(".life1").show();//show all lives
-    //reset SCORE & LIVES
+    //reset SCORE & player.lives
     player.score=0; 
-    LIVES=3;
+    player.lives=player.maxLife;
     $("#score").html("<p id='score'>"+player.score+'</p>');//Display SCORE 
     //reset player to original position
     player.x=INITIAL_X_PLAYER; 

@@ -31,23 +31,16 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
      
-    //load heart image to represent life
-    var HTML_Life="<img class='life1' src='images/Heart.png' height='15%' width='15%'>"; 
-    //load all heart images..do this in game  start/restart
-    for (i=0;i<MAX_LIFE;i++){
-        $(".heart-img").append(HTML_Life);
-    }
-
-    //set timer
-    loopTimerID=setInterval(displayTimer,1000);
-    $("#pausePlayButton").prop("disabled",true);
-    
+        
     
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
     //doc.body.appendChild(canvas);
     $("#canvas1").append(canvas); //append to canvas1 div 
 
+    //set timer
+    loopTimerID=setInterval(displayTimer,1000);
+    
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */

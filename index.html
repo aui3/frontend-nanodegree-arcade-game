@@ -14,14 +14,30 @@
     </audio>
     <div id="rules">
     	<h1> Arcade Game Clone </h1>
-    	<p>This is just some space to define rules of the game</p>
+    	<p>This is my version of the Arcade Frogger Game</p>
+        Game Rules
+        
+        <div>
+        
+        </div>
+        <ul>
+            <li><img id="arrow" src="images/arrowkeys.png" height="25%" width="25%" alt="Arrow Keys"> Use Arrow keys to move the player</li>
+            <li><img id="gem" src="images/GemOrange.png" height="10%" width="10%" alt="Arrow Keys"> Collect Gems to score points until time runs out</li>
+            <li> <img id="arrow" src="images/enemy-bug.png" height="10%" width="10%" alt="Arrow Keys">Avoid the bugs or else loose a life</li>
+            <li>Beat the high score!</li> 
+
+        </ul>
+        
     
     </div>
     <div id="canvas1">
     	
     </div>
     <div class="game-resources">
-        <div id="high-score">High Score: <p id="scoreHigh"></p></div>
+        <div id="high-score">
+            <div id="new-high-score">We have a new High Score!! </div>
+            High Score: <p id="scoreHigh"></p>
+        </div>
         <div class="timer"> Timer:<span id="countdown"></span></div>
         <div class="life">Lives: 
             <div class="heart-img">
@@ -34,15 +50,23 @@
         <div class="score">Score: <p id="score"></p></div>
         <div class="buttonControls"> 
             <button type="button" id="restartStartButton" onClick="gameStartRestart()">Start</button>
-            <button type="button" id="pausePlayButton" onClick="gamePause()">Pause</button>
+            <button type="button" disabled id="pausePlayButton" onClick="gamePause()">Pause</button>
             <!--<button type="button" id="reset" onClick="gameReset()">Reset </button>-->   
         </div>
         
 
     </div>
-    <script src="js/resources.js"></script>
+    <script src="js/resources.js" ></script>
+    
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
+    
+    
+
+
+    
+
+    
 
 </body>
 </html>

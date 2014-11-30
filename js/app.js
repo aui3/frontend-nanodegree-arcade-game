@@ -6,42 +6,42 @@ var CANVAS_WIDTH=505;
 var BLOCK_HEIGHT=80;//height of each element (grass,water,block/road) in the map
 
 
-var STEP_Y=80;//move 80 px vertically across the canvas
-var STEP_X=95;//move 95 pixels horizontally across the canvas
+var STEP_Y=80;//player moves 80 px vertically across the canvas
+var STEP_X=95;//player moves 95 pixels horizontally across the canvas
 
-
+//height and width of bug to check for collision
 var BUG_HEIGHT=70;
 var BUG_WIDTH=101;
 var BUG_SPEED =[80,100,120]; //randomly choose bug speeds from this array
-var MAX_BUGS=3;
-var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertically 
+var MAX_BUGS=3; //maximum number of bugs in the game
+var SLIDE_BUG_Y=75;//the actual bug image starts after 75 pixels down vertically in the sprite
 
-var SCORE=0;
 var HIGH_SCORE=0;
-var LIVES=51;
 var PAUSED=true;
 
 //initial position of player
 var INITIAL_X_PLAYER=200;
 var INITIAL_Y_PLAYER=400;
-var PLAYER_HEIGHT=80;
+//height and width of player to check for collision
+var PLAYER_HEIGHT=80; 
 var PLAYER_WIDTH=75;
-var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the right horizontally
-var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically 
+var SLIDE_PLAYER_X=15;//the actual player image starts after 15 pixels to the right horizontally in the sprite
+var SLIDE_PLAYER_Y=60;//the actual player image starts after 75 pixels down vertically in the sprite 
 var GAME_OVER=false;
 
 //Gems
 var MAX_GEMS=3;//this is the maximum number of gems at any given time. When player takes all gems displayed, new ones are shown 
-var GEM_COLORS=['Blue','Green','Orange'];
+var GEM_COLORS=['Blue','Green','Orange'];//new gem colors are chosen randomly from this array
 var GEM_WIDTH=101;
-var GEM_Y_LOCATIONS=[25+BLOCK_HEIGHT,110+BLOCK_HEIGHT,190+BLOCK_HEIGHT];//possible locations where the gems can be
+//possible y locations where the gems can be i.e y locations on the grey blocks.
+var GEM_Y_LOCATIONS=[25+BLOCK_HEIGHT,110+BLOCK_HEIGHT,190+BLOCK_HEIGHT];
 
-
+//global arrays to store enemy and gem objects
 var allEnemies= [];
 var allGems=[];
 
-//Timer for game loop
-var MAX_TIME=30
+//Timer for one game loop
+var MAX_TIME=30;
 var timerLoop=MAX_TIME;//set at 30 sec
 
 //FAIL STATES
@@ -51,7 +51,7 @@ var LIVES_UP=false;//game finished because lives up
 /*************************/
 //      ENEMY CLASS
 /*************************/
-//console.log(win.MAX_LIFE);
+
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -140,7 +140,8 @@ Player.prototype.update = function(dt) {
              //decrease life hearts
             this.lives=this.lives-1;
             //find the last visible child (heart) and make it invisible
-            $(".life").find(":visible:last").hide(); 
+            $(".heart-img").find(":visible:last").hide(); 
+            
             if (this.lives==0) { //player has used all lives and the game loop is over
                 PAUSED=true; //to freeze game objects
                 //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
@@ -153,16 +154,15 @@ Player.prototype.update = function(dt) {
                  //display high score   
                 if (this.score>HIGH_SCORE) {
                  //alert("hello");
+                    $("#new-high-score").show();
                     HIGH_SCORE=this.score;
                     $("#high-score").show();//("display:block");
                     $("#scoreHigh").html(HIGH_SCORE);
-            }
-
-
-                //ctx.font="40px Georgia";    
-                //ctx.fillText("GAME OVER",50,75);
+                }
             }       
+            break;//avoid multiple life loss
         }
+
     }
     //Check for Gem Collision with player
     //loop through all gems
@@ -173,7 +173,7 @@ Player.prototype.update = function(dt) {
              'right': allGems[gem].x+GEM_WIDTH,
              'left': allGems[gem].x
         };
-        if(allGems[gem].visible){ //if the hit gem is visible
+        if(allGems[gem].visible) { //if the hit gem is visible
             if(!(player1.left>(gem1.right) || player1.right < (gem1.left) ||player1.top>(gem1.bottom) || player1.bottom <(gem1.top))) {    
                //increase score
                 this.score+=5;
@@ -185,6 +185,7 @@ Player.prototype.update = function(dt) {
                 var audio = document.getElementById("audio");
                 audio.play();
             }
+
         }
     }
 }
@@ -266,8 +267,15 @@ Gems.prototype.render=function(){
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER,5,0);    
-instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
-console.log("player class brangc");
+//instantiateGameObjects(); //create enemy bugs, gems and push them to the global allEnemies, allGems array
+//load all heart images..do this in game  start/restart
+    //load heart image to represent life
+    var HTML_Life="<img class='life1' src='images/Heart.png' height='15%' width='15%'>"; 
+    
+    for (i=0;i<player.maxLife;i++){
+        $(".heart-img").append(HTML_Life);
+    }
+    $(".life1").hide();
 
 /************************************/
         //Helper Functions
@@ -275,65 +283,75 @@ console.log("player class brangc");
 
 //Instantiate all enemy and gems
 function instantiateGameObjects() {
-
     for (i=0; i<MAX_BUGS;i++) {
         //generate a random starting position in the row
         var randX=generateRandom((CANVAS_WIDTH-BUG_WIDTH),0);
-        //select a random speed for the bug
+        //select a random index to choose speed of the bug from the array BUG_SPEED
         var rand2=generateRandom(3,0);
         
         //select random y position i.e what row to show bug in
-        var randY=generateRandom(3,0);
+        var randY=generateRandom(3,0);//generate a number in the range [0,3) to pick from on the three rows in the map
         var y;
-        if (randY==0) y=65;
-        if (randY==1) y=145;
-        if (randY==2) y=225;
+        if (randY==0) y=65; //y location for the first row
+        if (randY==1) y=145; //y location for the second row
+        if (randY==2) y=225; //y location for the third row
         
-        //var enemy1= new Enemy(randX,y,BUG_SPEED[rand2]);
-        var enemy1= new Enemy(0,y,BUG_SPEED[rand2]);//start bugs from the left of the canvas, makes the game easy to play
+        //start bugs from the left of the canvas, makes the game easier to play instead of a random location
+        var enemy1= new Enemy(0,y,BUG_SPEED[rand2]);
         allEnemies.push(enemy1);
     }
 
     for (i=0; i<MAX_GEMS;i++) {
-        //generate a random x position in the row
-        var randX=generateRandom(4,0);//Math.floor(Math.random() *4 + 0);
+        //generate a random x position in the row from the five blocks in each row
+        var randX=generateRandom(4,0);
         
         //select random y position i.e what row to show gem in
-        var randY=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        var randY=generateRandom(3,0);
     
-        //select random color for the GEM
-        var rand2=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        //select random index to choose color from the GEM_COLORS array 
+        var rand2=generateRandom(3,0);
 
+        //last argument initially make the gem visible    
         var gem1= new Gems(GEM_COLORS[rand2],randX*GEM_WIDTH,GEM_Y_LOCATIONS[randY],true);
         allGems.push(gem1);
     }
+    
+    
 
+    $("#pausePlayButton").prop("disabled",true);
 
 }
 
 //Generate a random Rumber between 'x' and 'y'
-function generateRandom(x,y){
+function generateRandom(x,y) {
     return Math.floor(Math.random() *x + y);
 }
 
-//Set the Pause variable and rename Pause/Play button
-function gamePause(){
-
+//Call back function when Pause/Play button is pressed.
+//Set the PAUSE variable to control the and rename Pause/Play button
+/*
+    Player has one button to Pause or Play the Game. When the game is running, the button displays
+    'Pause', when the user clicks 'Pause', the game is paused and the button label changes to 'Play'.Now 
+    the player can press 'Play' to resume the game.
+*/
+function gamePause() {
+    //game already in pause state when button is pressed and player wants to resume game
     if($("#pausePlayButton").html()=='Play'){
         PAUSED=false;
-        ctx.globalAlpha=1;
-        $("#pausePlayButton").html('Pause');        
+        ctx.globalAlpha=1; //restore normal display
+        $("#pausePlayButton").html('Pause');//re-label button to Pause        
     }
+    //Game in play and player wants to pause
     else if($("#pausePlayButton").html()=='Pause'){
         PAUSED=true;
-        ctx.globalAlpha=0.5;
+        ctx.globalAlpha=0.5;//change opacity of canvas to indicate pause state
         $("#pausePlayButton").html('Play');
     }    
 }
 
-
+//Call back function for the Start/Restart button
 function gameReset() {
-    $(".life1").show();//show all lives
+    $(".life1").show();//show all lives i.e. heart images
     //reset SCORE & player.lives
     player.score=0; 
     player.lives=player.maxLife;
@@ -341,27 +359,29 @@ function gameReset() {
     //reset player to original position
     player.x=INITIAL_X_PLAYER; 
     player.y=INITIAL_Y_PLAYER;
+
 }
 
-//Game timer
-function displayTimer(){
+//Call back function for the setInterval(...) method. Called every second to update the Game timer
+function displayTimer() {
     if(!PAUSED) {//if game is paused do not decrement the timer
         timerLoop--;
         
         $("#countdown").html("<h1 id='countdown1'>"+timerLoop+'</h1>'); 
-        //$("#countdown").append(timerLoop);
+        
         if (timerLoop==0) { //game loop is over
             TIMES_UP=true;
-            PAUSED=true;//control variable to stop the motion game objects is set to true
+            PAUSED=true;//control variable to stop the motion of game objects is set to true
             GAME_OVER=true; //bugs and gems to stop displaying
             player.x=INITIAL_X_PLAYER;
             player.y=INITIAL_Y_PLAYER;
+            
             //disable  Play/Pause Button and Enable Start/Restart Button
             $("#restartStartButton").prop("disabled",false);
             $("#pausePlayButton").prop("disabled",true);
             //if high_score greater than player score, update High Score
             if (player.score>HIGH_SCORE) {
-                //alert("hello");
+                $("#new-high-score").show();
                 HIGH_SCORE=player.score;
                 $("#high-score").show();//("display:block");
                 $("#scoreHigh").html(HIGH_SCORE);
@@ -371,12 +391,13 @@ function displayTimer(){
 }
 
 function gameStartRestart(){
-     gameReset();//reset game
+     //$(".life1").hide();
      timerLoop=MAX_TIME; //resetTimer
      PAUSED=false;
      GAME_OVER=false;
      TIMES_UP=false;
      LIVES_UP=false;
+    
     //update Timer
     $("#countdown").html("<h1 id='countdown1'>"+timerLoop+'</h1>');
     //$("#countdown").append(timerLoop);
@@ -390,6 +411,7 @@ function gameStartRestart(){
 
     instantiateGameObjects();//recreate bugs and gems
     
+    gameReset();//reset game
     //enable play/pause and disable start/restart button
     $("#pausePlayButton").prop("disabled",false);
     $("#restartStartButton").prop("disabled",true);
@@ -400,7 +422,13 @@ function gameStartRestart(){
     }
     else if($("#restartStartButton").html()=='ReStart') {
         $("#restartStartButton").html('Start'); 
-    }    
+    }
+    $("#new-high-score").hide();
+
+    
+
+    
+    
 }
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

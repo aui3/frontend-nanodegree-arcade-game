@@ -11,32 +11,23 @@ body {
 	margin:2%;
 
 }
-.life {
+.timer, .life, .score, #high-score {
 	text-align: center;
-	display:flex;
-	flex-direction:column;
-	padding:3%;
-	margin: 2%;
+	padding: 2%;
+	margin:2%;
+	display: flex;
+	flex-direction: column;
 	border-style: solid;
 	border-width: 1px;
 	border-radius: 10px;
-	height: 120px;
-	width: 180px;
-
+	border-color: #C4C4BB;
+	height: 95px;
+	width: 220px;
+	background-color: #DADAD0;
 }
-#high-score {
-	text-align: center;
-	display:flex;
-	flex-direction:column;
-	padding:3%;
-	margin: 2%;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 10px;
-	height: 120px;
-	width: 180px;
 
-}
+
+
 .life1{
 	diisplay:none;
 }
@@ -49,42 +40,23 @@ body {
 
 	flex-directioon: column;
 }
-.score {
 
-	text-align: center;
-	display:flex;
-	flex-direction:column;
-	padding:2%;
-	margin: 2%;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 10px;
-	height: 120px;
-	width: 180px;
-}
 .game-resources {
 	max-width: 100%;
 	margin:2%;
-	padding:2%;
+	padding: 2%;
 	border-style: solid;
 	border-width: 2px;	
+	border-color: #D2D2C8;
+	background-color: #f2f2ea;
+	border-radius: 10px;
+	flex-direction:row;
 }
 .buttonControls {
 	text-align: left;
 	margin: 40px 0px 0px 40px;
 }
-.timer {
-	text-align: center;
-	padding: 2%;
-	margin:2%;
-	display: flex;
-	flex-direction: column;
-	border-style: solid;
-	border-width: 1px;
-	border-radius: 10px;
-	height: 120px;
-	width: 180px;
-}
+
 #countdown{
 	
 	padding:2%;

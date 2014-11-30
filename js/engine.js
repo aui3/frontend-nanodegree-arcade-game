@@ -16,7 +16,7 @@
 
 var CANVAS_HEIGHT=606;
 var CANVAS_WIDTH=505;
-var MAX_LIFE=3;
+var MAX_LIFE=5;
 var loopTimerID;//id of the timer that controls how long one game loop runs
 
 var Engine = (function(global) {
@@ -25,28 +25,28 @@ var Engine = (function(global) {
      * set the canvas elements height/width and add it to the DOM.
      */
     
-    //load heart image to represent life
-    var HTML_Life="<img class='life1' src='images/Heart.png' height='50' width='50'>"; 
-    
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-    
+     
+    //load heart image to represent life
+    var HTML_Life="<img class='life1' src='images/Heart.png' height='15%' width='15%'>"; 
+    //load all heart images..do this in game  start/restart
+    for (i=0;i<MAX_LIFE;i++){
+        $(".heart-img").append(HTML_Life);
+    }
+
     //set timer
     loopTimerID=setInterval(displayTimer,1000);
     $("#pausePlayButton").prop("disabled",true);
-    //load all heart images..do this in gamestartrestart
-    /*for (i=0;i<MAX_LIFE;i++){
-        $(".life").append(HTML_Life);
-    }
-    $("#countdown").append(timerLoop);
-*/
+    
+    
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
     //doc.body.appendChild(canvas);
-    $("#canvas1").append(canvas); //append to canvas div 
+    $("#canvas1").append(canvas); //append to canvas1 div 
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.

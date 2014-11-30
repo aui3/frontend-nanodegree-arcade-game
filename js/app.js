@@ -18,7 +18,7 @@ var SLIDE_BUG_Y=75;//the actual player image starts after 75 pixels down vertica
 
 var SCORE=0;
 var HIGH_SCORE=0;
-var LIVES=3;
+var LIVES=51;
 var PAUSED=true;
 
 //initial position of player
@@ -51,7 +51,7 @@ var LIVES_UP=false;//game finished because lives up
 /*************************/
 //      ENEMY CLASS
 /*************************/
-
+//console.log(win.MAX_LIFE);
 var Enemy = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -95,10 +95,12 @@ Enemy.prototype.render = function() {
 /*************************/
 //      PLAYER CLASS
 /*************************/
-var Player=function(x,y){
+var Player=function(x,y,maxLife,score){
     this.x=x;
     this.y=y;
     this.sprite='images/char-cat-girl.png';
+    this.maxLife=maxLife;
+    this.score=score;
 }
 
 Player.prototype.update = function(dt) {
@@ -261,9 +263,9 @@ Gems.prototype.render=function(){
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER);    
+var player= new Player(INITIAL_X_PLAYER,INITIAL_Y_PLAYER,5,0);    
 instantiateGameObjects(); //create enemy bugs and push them to the global allEnemies array
-
+console.log("player class brangc");
 
 /************************************/
         //Helper Functions

@@ -5,8 +5,9 @@ This is my version of the classic arcade game Frogger as part of the third Proje
 To play the game, follow this link: 
 
 http://aui3.github.io/frontend-nanodegree-arcade-game/
+
 Goal:
--Score High!
+-Score as High as you can in the given time while avoiding the bugs!
 
 Game Play:
 

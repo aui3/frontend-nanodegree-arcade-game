@@ -1,4 +1,4 @@
-Arcade Game Clone
+<h1>Arcade Game Clone</h1>
 
 This is my version of the classic arcade game Frogger as part of the third Project in Udacity's Front End Nano Degree Program!
 

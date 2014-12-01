@@ -14,13 +14,13 @@
  * a little simpler to work with.
  */
 
-var CANVAS_HEIGHT=606;
-var CANVAS_WIDTH=505;
-var MAX_LIFE=5;
-var loopTimerID;//id of the timer that controls how long one game loop runs
+    var CANVAS_HEIGHT=606;
+    var CANVAS_WIDTH=505;
+    var MAX_LIFE=5;
+    var loopTimerID;//id of the timer that controls how long one game loop runs
 
-var Engine = (function(global) {
-    /* Predefine the variables we'll be using within this scope,
+    var Engine = (function(global) {
+        /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */

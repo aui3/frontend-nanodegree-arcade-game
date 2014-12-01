@@ -62,7 +62,6 @@ var Enemy = function(x,y,speed) {
     this.x=x;
     this.y=y;
     this.speed=speed;
-    
 }
 
 // Update the enemy's position, required method for game
@@ -71,15 +70,13 @@ var Enemy = function(x,y,speed) {
 Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
-    // all com          puters.
-    
-    
+    // all computers.
     if (!PAUSED) this.x=this.x+this.speed*dt;
     
     if (this.x>=CANVAS_WIDTH) {
         this.x=0; // reset enemy to the left of the canvas
         //generate a random number between 0 and 3 to decide what row the bug re-appears from
-        var rand1=generateRandom(3,0);//Math.floor(Math.random() *3 + 0);
+        var rand1=generateRandom(3,0);
         if (rand1==0) this.y=65;
         if (rand1==1) this.y=145;
         if (rand1==2) this.y=225;
@@ -99,9 +96,9 @@ var Player=function(x,y,maxLife,score){
     this.x=x;
     this.y=y;
     this.sprite='images/char-cat-girl.png';
-    this.lives=maxLife;
-    this.maxLife=maxLife;
-    this.score=score;
+    this.lives=maxLife;//lives remaining
+    this.maxLife=maxLife;//maximum lives
+    this.score=score;//player score
 
 }
 
@@ -134,32 +131,7 @@ Player.prototype.update = function(dt) {
         };
 
         if(!(player1.left>(bug.right-10) || player1.right < (bug.left+10) ||player1.top>=(bug.bottom-10) || player1.bottom <=(bug.top+10))) {
-            //reset to initial player position
-            this.x=INITIAL_X_PLAYER;
-            this.y=INITIAL_Y_PLAYER;
-             //decrease life hearts
-            this.lives=this.lives-1;
-            //find the last visible child (heart) and make it invisible
-            $(".heart-img").find(":visible:last").hide(); 
-            
-            if (this.lives==0) { //player has used all lives and the game loop is over
-                PAUSED=true; //to freeze game objects
-                //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
-                //disable Pause/Play Button and enable Start/restart Button
-                $("#restartStartButton").prop("disabled",false);
-                $("#pausePlayButton").prop("disabled",true);
-                
-                GAME_OVER=true;
-                LIVES_UP=true;
-                 //display high score   
-                if (this.score>HIGH_SCORE) {
-                 //alert("hello");
-                    $("#new-high-score").show();
-                    HIGH_SCORE=this.score;
-                    $("#high-score").show();//("display:block");
-                    $("#scoreHigh").html(HIGH_SCORE);
-                }
-            }       
+            handleEnemyCollision("bug");       
             break;//avoid multiple life loss
         }
 
@@ -321,7 +293,35 @@ function instantiateGameObjects() {
     $("#pausePlayButton").prop("disabled",true);
 
 }
-
+//Handle Collision
+function handleEnemyCollision(){
+    //reset to initial player position
+    player.x=INITIAL_X_PLAYER;
+    player.y=INITIAL_Y_PLAYER;
+     //decrease life hearts
+    player.lives=player.lives-1;
+    //find the last visible child (heart) and make it invisible
+    $(".heart-img").find(":visible:last").hide(); 
+    
+    if (player.lives==0) { //player has used all lives and the game loop is over
+        PAUSED=true; //to freeze game objects
+        //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
+        //disable Pause/Play Button and enable Start/restart Button
+        $("#restartStartButton").prop("disabled",false);
+        $("#pausePlayButton").prop("disabled",true);
+        
+        GAME_OVER=true;
+        LIVES_UP=true;
+         //display high score   
+        if (player.score>HIGH_SCORE) {
+         //alert("hello");
+            $("#new-high-score").show();
+            HIGH_SCORE=player.score;
+            $("#high-score").show();//("display:block");
+            $("#scoreHigh").html(HIGH_SCORE);
+        }
+    }
+}
 //Generate a random Rumber between 'x' and 'y'
 function generateRandom(x,y) {
     return Math.floor(Math.random() *x + y);

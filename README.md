@@ -18,7 +18,7 @@ Game Play:
 - Player has a given number of lives, as depicted by the Hearts.
 - Collect as many gems, randomly positioned on the enemy's path, as you can before time runs out.
 - Each Gem is worth 5 points. There will only be atmost 3 gems available to grab at any time. More gems will continue to appear after player grabs all three until the game ends.  
-- Bugs/Enenmy move randomly and at random speed on the stone path.
+- Bugs/Enemy move randomly and at random speed on the stone path.
 - Collision with the Bug results in loss of life and the player moves back to the initial position.
 - Game ends if either the time runs out or the player looses all of their lives.
 - Press Restart to begin the game again.

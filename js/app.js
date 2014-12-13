@@ -475,7 +475,7 @@ function handleEnemyCollision(){
     
     if (player.lives==0) { //player has used all lives and the game loop is over
         PAUSED=true; //to freeze game objects
-        //ctx.drawImage(Resources.get('images/gameover.png'),0,0);
+        
         //disable Pause/Play Button and enable Start/restart Button
         $("#restartStartButton").prop("disabled",false);
         $("#pausePlayButton").prop("disabled",true);
@@ -484,10 +484,9 @@ function handleEnemyCollision(){
         LIVES_UP=true;
          //display high score   
         if (player.score>HIGH_SCORE) {
-         //alert("hello");
             $("#new-high-score").show();
             HIGH_SCORE=player.score;
-            $("#high-score").show();//("display:block");
+            $("#high-score").show();
             $("#scoreHigh").html(HIGH_SCORE);
         }
     }
